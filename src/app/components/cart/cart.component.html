@@ -1,0 +1,78 @@
+<div style="margin-top: 80px;">
+    <!-- with product -->
+    <div class="row" *ngIf="products.length!=0">
+        <div class="col-8">
+            <!-- table -->
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let product of products;let i=index">
+                    <td scope="row">{{i+1}}</td>
+                    <td>{{product.id}}</td>
+                    <td>{{product.title}}</td>
+                    <td><img [src]=product.image alt="" style="height: 150px;width: 150px;"></td>
+                    <td class="d-flex">
+                      <button class="btn" (click)="cartDecrement(product.id)">-</button>
+                      <input type="text" [value]="product.quantity" readonly class="form-control w-25">
+                      <button class="btn" (click)="cartIncrement(product.id)">+</button>
+
+                    </td>
+                    <td>{{product.price}}</td>
+                    <td><i class="fa-solid fa-trash text-danger" (click)="deleteCartProduct(product.id)"></i></td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+
+        </div>
+        <div class="col-4">
+            <!-- billing -->
+            <div class="card text-center p-4 m-5 shadow">
+                <h3>Cart Summary</h3>
+                <h1>Total: $ {{totalPrice}}</h1>
+                <button class="btn btn-success m-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Check Out</button>
+            </div>
+        </div>
+
+    </div>
+    <!-- without product -->
+    <div class="text-center m-5 p-5" *ngIf="products.length==0">
+        <img src="https://bakestudio.in/assets/images/cart/empty-cart.gif" alt="">
+        <h3 class="m-4"><b>Your cart was empty</b></h3>
+        <button class="btn btn-success" routerLink="/">Add More</button>
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">CheckOut Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5 class="text-center m-3">Enter Your Details</h5>
+        <input type="text" class="form-control mb-3" placeholder="Name">
+        <input type="text" class="form-control mb-3" placeholder="PhoneNumber">
+        <input type="text" class="form-control mb-3" placeholder="Address">
+        <h5 class="text-center m-3">Total Price: {{totalPrice}}</h5>
+      </div>
+      <div *ngIf="makepaymentStatus">
+        <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="makePayment()">Make Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
